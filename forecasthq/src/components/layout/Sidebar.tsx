@@ -8,12 +8,14 @@ import {
   Sparkles,
   PlusCircle,
   Brain,
-  User
+  User,
+  Layers
 } from 'lucide-react';
 
 const navigation = [
   { name: 'Overview', href: '/', icon: LayoutDashboard },
   { name: 'Markets', href: '/markets', icon: TrendingUp },
+  { name: 'Derivatives', href: '/derivative', icon: Layers },
   { name: 'Intelligence', href: '/intelligence', icon: Brain },
   { name: 'AI Assistant', href: '/ai-assistant', icon: Sparkles },
   { name: 'Create Market', href: '/admin', icon: PlusCircle },

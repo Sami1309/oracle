@@ -19,20 +19,32 @@ function generateProbabilityHistory(start: number, end: number, days: number) {
   const history = [];
   const now = new Date();
 
-  for (let i = days; i >= 0; i--) {
-    const date = new Date(now);
-    date.setDate(date.getDate() - i);
+  // Generate more data points (multiple per day for granularity)
+  const pointsPerDay = 4;
+  const totalPoints = days * pointsPerDay;
 
-    // Random walk with drift toward end value
-    const progress = (days - i) / days;
-    const targetProb = start + (end - start) * progress;
-    const noise = (Math.random() - 0.5) * 0.1;
-    const prob = Math.max(0.05, Math.min(0.95, targetProb + noise));
+  let currentProb = start;
+
+  for (let i = totalPoints; i >= 0; i--) {
+    const date = new Date(now);
+    date.setHours(date.getHours() - (i * (24 / pointsPerDay)));
+
+    // Step changes - only update probability occasionally (simulating trades)
+    if (Math.random() > 0.6) {
+      const drift = (end - currentProb) * 0.05; // Drift toward target
+      const jump = (Math.random() - 0.5) * 0.08; // Random jump
+      currentProb = Math.max(0.05, Math.min(0.95, currentProb + drift + jump));
+    }
 
     history.push({
       timestamp: date.toISOString(),
-      probability: prob * 100,
+      probability: currentProb * 100,
     });
+  }
+
+  // Ensure last point is close to end value
+  if (history.length > 0) {
+    history[history.length - 1].probability = end * 100;
   }
 
   return history;
@@ -47,9 +59,9 @@ export const DEMO_MARKETS: Market[] = [
     category: 'product',
     resolutionCriteria: 'v2.0 is deployed to production and announced in #releases channel',
     currentProbability: 0.58,
-    yesShares: 580,
-    noShares: 420,
-    volume: 3240,
+    yesShares: 5800,
+    noShares: 4200,
+    volume: 32400,
     traders: 67,
     history: generateProbabilityHistory(0.45, 0.58, 30),
     closesAt: '2025-03-15',
@@ -63,9 +75,9 @@ export const DEMO_MARKETS: Market[] = [
     category: 'product',
     resolutionCriteria: 'Analytics dashboard shows 10,000+ DAU for 7 consecutive days',
     currentProbability: 0.42,
-    yesShares: 420,
-    noShares: 580,
-    volume: 2890,
+    yesShares: 4200,
+    noShares: 5800,
+    volume: 28900,
     traders: 52,
     history: generateProbabilityHistory(0.55, 0.42, 30),
     closesAt: '2025-03-31',
@@ -81,9 +93,9 @@ export const DEMO_MARKETS: Market[] = [
     category: 'sales',
     resolutionCriteria: 'Signed contract received by Feb 28, 2025',
     currentProbability: 0.71,
-    yesShares: 710,
-    noShares: 290,
-    volume: 4520,
+    yesShares: 7100,
+    noShares: 2900,
+    volume: 45200,
     traders: 34,
     history: generateProbabilityHistory(0.50, 0.71, 21),
     closesAt: '2025-02-28',
@@ -97,9 +109,9 @@ export const DEMO_MARKETS: Market[] = [
     category: 'sales',
     resolutionCriteria: 'Finance confirms Q1 recognized revenue >= $2.5M',
     currentProbability: 0.64,
-    yesShares: 640,
-    noShares: 360,
-    volume: 5670,
+    yesShares: 6400,
+    noShares: 3600,
+    volume: 56700,
     traders: 89,
     history: generateProbabilityHistory(0.60, 0.64, 45),
     closesAt: '2025-04-15',
@@ -115,9 +127,9 @@ export const DEMO_MARKETS: Market[] = [
     category: 'competitor',
     resolutionCriteria: 'Official press release or earnings call announcement',
     currentProbability: 0.38,
-    yesShares: 380,
-    noShares: 620,
-    volume: 1890,
+    yesShares: 3800,
+    noShares: 6200,
+    volume: 18900,
     traders: 28,
     history: generateProbabilityHistory(0.25, 0.38, 14),
     closesAt: '2025-04-01',
@@ -131,9 +143,9 @@ export const DEMO_MARKETS: Market[] = [
     category: 'competitor',
     resolutionCriteria: 'Funding announcement on Crunchbase or official press',
     currentProbability: 0.55,
-    yesShares: 550,
-    noShares: 450,
-    volume: 2340,
+    yesShares: 5500,
+    noShares: 4500,
+    volume: 23400,
     traders: 41,
     history: generateProbabilityHistory(0.45, 0.55, 28),
     closesAt: '2025-03-31',
@@ -149,9 +161,9 @@ export const DEMO_MARKETS: Market[] = [
     category: 'hiring',
     resolutionCriteria: 'Signed offer accepted and announced in #general',
     currentProbability: 0.28,
-    yesShares: 280,
-    noShares: 720,
-    volume: 890,
+    yesShares: 2800,
+    noShares: 7200,
+    volume: 8900,
     traders: 23,
     history: generateProbabilityHistory(0.45, 0.28, 60),
     closesAt: '2025-03-01',
@@ -165,9 +177,9 @@ export const DEMO_MARKETS: Market[] = [
     category: 'hiring',
     resolutionCriteria: 'HR confirms 50+ engineers on payroll as of June 30',
     currentProbability: 0.52,
-    yesShares: 520,
-    noShares: 480,
-    volume: 1560,
+    yesShares: 5200,
+    noShares: 4800,
+    volume: 15600,
     traders: 45,
     history: generateProbabilityHistory(0.60, 0.52, 30),
     closesAt: '2025-06-30',

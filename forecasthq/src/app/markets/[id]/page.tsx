@@ -7,7 +7,7 @@ import { TradingPanel } from '@/components/markets/TradingPanel';
 import { ProbabilityChart } from '@/components/markets/ProbabilityChart';
 import { DiscussionThread } from '@/components/markets/DiscussionThread';
 import { getMarketById } from '@/lib/seed-data';
-import { ArrowLeft, Clock, Users, Calendar, User, Sparkles, Brain } from 'lucide-react';
+import { ArrowLeft, Clock, Users, Calendar, User, Sparkles, Brain, Layers } from 'lucide-react';
 import Link from 'next/link';
 
 const categoryColors: Record<string, string> = {
@@ -186,6 +186,22 @@ export default function MarketDetailPage() {
               </div>
               <p className="text-sm text-gray-600">
                 Analyze data points to inform your prediction.
+              </p>
+            </Link>
+
+            {/* Derivative Market Link */}
+            <Link
+              href={`/derivative?market=${market.id}`}
+              className="block bg-gradient-to-br from-violet-50 to-purple-50 rounded-lg p-5 border border-violet-100 hover:border-violet-300 transition-colors"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className="p-2 bg-violet-100 rounded-lg">
+                  <Layers className="w-5 h-5 text-violet-600" />
+                </div>
+                <h3 className="font-semibold text-gray-900">Create Derivative</h3>
+              </div>
+              <p className="text-sm text-gray-600">
+                Combine with other markets for complex bets.
               </p>
             </Link>
 

@@ -3,7 +3,8 @@
 export class LMSR {
   private b: number; // liquidity parameter
 
-  constructor(liquidity: number = 100) {
+  constructor(liquidity: number = 1000) {
+    // Higher liquidity = smaller price impact per trade
     this.b = liquidity;
   }
 
@@ -24,6 +25,12 @@ export class LMSR {
     const expYes = Math.exp(currentYes / this.b);
     const expNo = Math.exp(currentNo / this.b);
     return expYes / (expYes + expNo);
+  }
+
+  // Get price for buying yes/no shares (in cents, 0-100)
+  price(currentYes: number, currentNo: number, buyingYes: boolean): number {
+    const prob = this.probability(currentYes, currentNo);
+    return buyingYes ? prob * 100 : (1 - prob) * 100;
   }
 
   // Calculate shares received for a given cost
@@ -51,5 +58,11 @@ export class LMSR {
     }
 
     return low;
+  }
+
+  // Calculate potential winnings if outcome is correct
+  potentialWinnings(shares: number, avgPrice: number): number {
+    // Each share pays out $1 if correct
+    return shares - (shares * avgPrice);
   }
 }

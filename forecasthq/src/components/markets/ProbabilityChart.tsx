@@ -49,7 +49,7 @@ export function ProbabilityChart({ history }: ProbabilityChartProps) {
             />
             <ReferenceLine y={50} stroke="#e5e7eb" strokeDasharray="3 3" />
             <Line
-              type="monotone"
+              type="stepAfter"
               dataKey="probability"
               stroke="#8b5cf6"
               strokeWidth={2}
