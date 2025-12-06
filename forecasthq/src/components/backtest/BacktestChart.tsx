@@ -12,13 +12,14 @@ import {
   ReferenceDot,
 } from 'recharts';
 import { HistoricalEvent, TimeSeriesMetric, getMetricValueAtTime } from '@/lib/historical-events';
-import { TrendingUp, TrendingDown, AlertCircle, Flag, Newspaper, Activity } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertCircle, Flag, Newspaper, Activity, MousePointer2 } from 'lucide-react';
 
 interface BacktestChartProps {
   history: { timestamp: string; probability: number }[];
   events: HistoricalEvent[];
   metrics: TimeSeriesMetric[];
   onTimeSelect: (timestamp: Date, probability: number) => void;
+  onAnalyze?: () => void;
   selectedTimestamp: Date | null;
 }
 
@@ -35,8 +36,9 @@ const impactColors = {
   neutral: 'bg-slate-400',
 };
 
-export function BacktestChart({ history, events, metrics, onTimeSelect, selectedTimestamp }: BacktestChartProps) {
+export function BacktestChart({ history, events, metrics, onTimeSelect, onAnalyze, selectedTimestamp }: BacktestChartProps) {
   const [hoveredEvent, setHoveredEvent] = useState<HistoricalEvent | null>(null);
+  const [isHovering, setIsHovering] = useState(false);
 
   // Map events to chart positions
   const eventPositions = useMemo(() => {
@@ -61,8 +63,21 @@ export function BacktestChart({ history, events, metrics, onTimeSelect, selected
     if (e?.activePayload?.[0]) {
       const { timestamp, probability } = e.activePayload[0].payload;
       onTimeSelect(new Date(timestamp), probability);
+      setIsHovering(true);
     }
   }, [onTimeSelect]);
+
+  const handleClick = useCallback((e: any) => {
+    if (e?.activePayload?.[0] && onAnalyze) {
+      const { timestamp, probability } = e.activePayload[0].payload;
+      onTimeSelect(new Date(timestamp), probability);
+      onAnalyze();
+    }
+  }, [onTimeSelect, onAnalyze]);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovering(false);
+  }, []);
 
   // Custom tooltip
   const CustomTooltip = ({ active, payload }: any) => {
@@ -92,6 +107,11 @@ export function BacktestChart({ history, events, metrics, onTimeSelect, selected
           </span>
           <span className="text-lg font-bold text-slate-900">{probability.toFixed(1)}%</span>
         </div>
+        {onAnalyze && (
+          <div className="mb-3 pb-2 border-b border-slate-100">
+            <span className="text-xs text-indigo-600 font-medium">Click to analyze this point</span>
+          </div>
+        )}
 
         {metricValues.length > 0 && (
           <div className="mb-3">
@@ -147,9 +167,17 @@ export function BacktestChart({ history, events, metrics, onTimeSelect, selected
         </div>
       </div>
 
-      <div className="h-72 select-none">
+      <div className="h-72 select-none relative">
+        {!isHovering && !selectedTimestamp && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg border border-slate-200 flex items-center gap-2 text-sm text-slate-500 animate-pulse">
+              <MousePointer2 className="w-4 h-4" />
+              Drag over chart to explore data
+            </div>
+          </div>
+        )}
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={history} onMouseMove={handleMouseMove}>
+          <LineChart data={history} onMouseMove={handleMouseMove} onClick={handleClick} onMouseLeave={handleMouseLeave}>
             <defs>
               <linearGradient id="probGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.2} />

@@ -118,6 +118,7 @@ function BacktestContent() {
                 events={events}
                 metrics={metrics}
                 onTimeSelect={handleTimeSelect}
+                onAnalyze={() => setShowAnalysis(true)}
                 selectedTimestamp={selectedTime}
               />
             </div>
