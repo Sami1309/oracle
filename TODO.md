@@ -1,5 +1,9 @@
 # ForecastHQ - Future Improvements
 
+LLM judgement/eval
+
+
+
 ## High Priority
 - [ ] Add real database persistence (Supabase or similar)
 - [ ] Implement user authentication (email/SSO)
