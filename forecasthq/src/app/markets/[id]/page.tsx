@@ -7,7 +7,7 @@ import { TradingPanel } from '@/components/markets/TradingPanel';
 import { ProbabilityChart } from '@/components/markets/ProbabilityChart';
 import { DiscussionThread } from '@/components/markets/DiscussionThread';
 import { getMarketById } from '@/lib/seed-data';
-import { ArrowLeft, Clock, Users, Calendar, User, Sparkles, Brain, Layers } from 'lucide-react';
+import { ArrowLeft, Clock, Users, Calendar, User, Sparkles, Layers, History } from 'lucide-react';
 import Link from 'next/link';
 
 const categoryColors: Record<string, string> = {
@@ -173,19 +173,19 @@ export default function MarketDetailPage() {
               onTrade={handleTrade}
             />
 
-            {/* AI Intelligence Link */}
+            {/* Backtest Analysis Link */}
             <Link
-              href={`/intelligence?market=${market.id}`}
-              className="block bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg p-5 border border-amber-100 hover:border-amber-300 transition-colors"
+              href={`/backtest?market=${market.id}`}
+              className="block bg-gradient-to-br from-indigo-50 to-violet-50 rounded-lg p-5 border border-indigo-100 hover:border-indigo-300 transition-colors"
             >
               <div className="flex items-center gap-3 mb-2">
-                <div className="p-2 bg-amber-100 rounded-lg">
-                  <Brain className="w-5 h-5 text-amber-600" />
+                <div className="p-2 bg-indigo-100 rounded-lg">
+                  <History className="w-5 h-5 text-indigo-600" />
                 </div>
-                <h3 className="font-semibold text-gray-900">AI Intelligence</h3>
+                <h3 className="font-semibold text-gray-900">Backtest Analysis</h3>
               </div>
               <p className="text-sm text-gray-600">
-                Analyze data points to inform your prediction.
+                Explore historical data and AI forecast insights.
               </p>
             </Link>
 
